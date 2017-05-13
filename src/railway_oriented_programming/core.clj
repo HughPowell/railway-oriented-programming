@@ -1,10 +1,9 @@
 (ns railway-oriented-programming.core
   (:refer-clojure :rename {map core-map}))
 
-(defn- execute [[value :as two-track-input] switch-fn]
-  (if value
-    (switch-fn value)
-    two-track-input))
+(defmulti execute (fn [[value] _] value))
+(defmethod execute nil [two-track-input _] two-track-input)
+(defmethod execute :default [[value] switch-fn] (switch-fn value))
 
 (defn succeed [value]
   [value nil])
