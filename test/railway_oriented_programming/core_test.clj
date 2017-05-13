@@ -70,7 +70,7 @@
                       (bind validate-2)
                       (bind validate-3)
                       (map canonicalise-email)
-                      (map (tee update-database)))))
+                      (tee update-database))))
 
 (deftest try-catch-fn
   (assert-usecase (>=> validate-1
