@@ -4,7 +4,7 @@
 
 A Clojure implementation of [Railway Oriented Programming](https://fsharpforfunandprofit.com/posts/recipe-part2/).  I strongly suggest reading and understanding the article before diving in with this library.
 
-## Other project
+## Other Projects
 
 There's a couple of other projects doing something very similar. [One](https://gist.github.com/ah45/7518292c620679c460557a7038751d6d) using the Clojure cats library and [another](https://github.com/jwillem/rop-clojure) that's under active development.
 
