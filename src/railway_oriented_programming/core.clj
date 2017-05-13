@@ -51,3 +51,12 @@
     (if value
       (succeed (success-fn value))
       (fail (failure-fn error)))))
+
+(defn plus [add-success add-failure & switch-fns]
+  (fn [input]
+    (let [results ((apply juxt switch-fns) input)
+          failures (filter (comp nil? first) results)]
+      (if (empty? failures)
+        (succeed (apply add-success (core-map first results)))
+        (fail (apply add-failure (core-map second failures)))))))
+
