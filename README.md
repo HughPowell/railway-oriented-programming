@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/HughPowell/railway-oriented-programming.svg?branch=master)](https://travis-ci.org/HughPowell/railway-oriented-programming)
+
 # railway-oriented-programming
 
 A Clojure library designed to ... well, that part is up to you.
