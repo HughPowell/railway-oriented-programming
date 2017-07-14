@@ -3,8 +3,17 @@
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
   file, You can obtain one at http://mozilla.org/MPL/2.0/."
-  (:refer-clojure :rename {map core-map})
-  (:import (java.util NoSuchElementException)))
+  (:refer-clojure :rename {map core-map}))
+
+(defn succeeded?
+  "Determines if the two-track-input contains a success"
+  [[value error]]
+  (and (some? value) (nil? error)))
+
+(defn failed?
+  "Determines if the two-track-input contains a failure"
+  [[value error]]
+  (and (nil? value) (some? error)))
 
 (defn succeed
   "Creates a two-track result by placing the value on the success
@@ -18,35 +27,23 @@
   [error]
   [nil error])
 
-(defn succeeded?
-  "Determines if the two-track-input contains a success"
-  [two-track-input]
-  (-> two-track-input first nil? not))
+(defn success
+  "Gets the success from the two-track-input."
+  [[value _]]
+  value)
 
-(defn failed?
-  "Determines if the two-track-input contains a failure"
-  [two-track-input]
-  (-> two-track-input succeeded? not))
-
-(defn get-success
-  "Gets the success from the two-track-input.  Throws a
-  NoSuchElementException if one doesn't exist."
-  [two-track-input]
-  (or (first two-track-input) (throw (NoSuchElementException. "No success available"))))
-
-(defn get-failure
-  "Gets the failure from the two-track-input.  Throws a
-  NoSuchElementException if one doesn't exist."
-  [two-track-input]
-  (or (second two-track-input) (throw (NoSuchElementException. "No failure available"))))
+(defn failure
+  "Gets the failure from the two-track-input."
+  [[_ error]]
+  error)
 
 (defmulti execute (fn [two-track-input _] (succeeded? two-track-input)))
 (defmethod execute true [two-track-input switch-fn]
-  (-> two-track-input get-success switch-fn))
+  (-> two-track-input success switch-fn))
 (defmethod execute :default [two-track-input _] two-track-input)
 
 (defn bind
-  "An adapter that takes a swtich function and creates a new function
+  "An adapter that takes a switch function and creates a new function
   that takes a two-track value as input.  If the returned function
   is called with an arg that has a failure branch the arg is
   returned unchanged, otherwise the result of calling switch-fn on
@@ -108,7 +105,7 @@
   dead-end-fn."
   [dead-end-fn]
   (fn [one-or-two-track-input]
-    (dead-end-fn)
+    (dead-end-fn one-or-two-track-input)
     one-or-two-track-input))
 
 (defn try-catch
@@ -128,18 +125,19 @@
   [success-fn failure-fn]
   (fn [two-track-input]
     (if (succeeded? two-track-input)
-      (-> two-track-input get-success success-fn succeed)
-      (-> two-track-input get-failure failure-fn fail))))
+      (-> two-track-input success success-fn succeed)
+      (-> two-track-input failure failure-fn fail))))
 
-(defn plus [merge-success merge-failure & switch-fns]
-  "Returns a function that executes all switch-fns in parrallel and
+(defn plus
+  "Returns a function that executes all switch-fns in parallel and
   merges the results using merge-success if they all completed
   successfully or merges all of the failures using merge-failure
   otherwise."
+  [merge-success merge-failure & switch-fns]
   (fn [one-track-input]
     (let [results ((apply juxt switch-fns) one-track-input)
           failures (filter failed? results)]
       (if (empty? failures)
-        (succeed (apply merge-success (core-map get-success results)))
-        (fail (apply merge-failure (core-map get-failure failures)))))))
+        (succeed (apply merge-success (core-map success results)))
+        (fail (apply merge-failure (core-map failure failures)))))))
 
