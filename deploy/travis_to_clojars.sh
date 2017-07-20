@@ -2,7 +2,7 @@
 
 if ! [[ $(git log -1 --pretty=%B) =~ ^Version\ [0-9]+\.[0-9]+\.[0-9]+-SNAPSHOT$ ]] ; then
 	echo "Deploying latest commit ..."
-	git remote set-url origin https://$GITHUB_TOKEN@github.com/$GITHUB_ORG/railway-oriented-clj.git &&
+	git remote set-url origin https://$GITHUB_TOKEN@github.com/$GITHUB_ORG/railway-oriented-programming.git &&
 	git branch --set-upstream-to origin/master master &&
 	git config user.name "$RELEASERS_NAME" &&
 	git config user.email "$RELEASERS_EMAIL" &&
