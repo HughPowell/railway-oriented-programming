@@ -14,7 +14,7 @@ For Leiningen, add the following to the dependencies key in project.clj
 
     :dependencies
         [...
-         [railway-oriented-programming "0.1.1"]
+         [railway-oriented-programming "0.1.2"]
          ...]
 
 ## Hacking on this Library
