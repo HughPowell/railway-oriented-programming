@@ -30,7 +30,7 @@ To then use it in your project add it to the projects dependencies in project.cl
 
     :dependencies
         [...
-         [railway-oriented-programming "0.1.0-SNAPSHOT"]
+         [railway-oriented-programming "0.1.3-SNAPSHOT"]
          ...]
 
 ## Ownership and License
