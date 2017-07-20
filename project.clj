@@ -1,4 +1,4 @@
-(defproject railway-oriented-programming "0.1.1"
+(defproject railway-oriented-programming "0.1.2-SNAPSHOT"
   :description "An implementation of railway oriented programming"
   :url "https://github.com/HughPowell/railway-oriented-programming"
   :license {:name "Mozilla Public License v2.0"
